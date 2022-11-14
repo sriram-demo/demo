@@ -70,3 +70,5 @@ export CT_PROMETHEUS_URL="https://prometheus.mdm-shrd-eks-prv.usw2.cloudtrust.ro
 #staging-ebf3
 
 #sfsf
+
+#run-tests-count:1
