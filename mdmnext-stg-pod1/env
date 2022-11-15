@@ -70,3 +70,4 @@ export CT_PROMETHEUS_URL="https://prometheus.mdm-shrd-eks-prv.usw2.cloudtrust.ro
 #staging-ebf3
 
 #run-tests-count:2
+#gitops-adhoc-runner-count=1
