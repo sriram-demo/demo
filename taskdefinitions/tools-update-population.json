@@ -1,0 +1,4 @@
+{
+  "name": "Update population files and list",
+  "command": "./bin/tools/manage-population-files.sh -a=copy"
+}
