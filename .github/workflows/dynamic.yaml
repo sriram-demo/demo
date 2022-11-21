@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 360 # 6 hour timeout
     strategy:
       matrix:
-        job: ${{ fromJson(needs.generate-job-strategy-matrix.outputs.job-strategy-matrix) }}
+        job: ["update","ingress-deploy","elastic-op"] #${{ fromJson(needs.generate-job-strategy-matrix.outputs.job-strategy-matrix) }}
       max-parallel: 1 # Run jobs serially
       # max-parallel: ${{ github.event.inputs.number_of_jobs }} # Run jobs in parallel
     steps:
