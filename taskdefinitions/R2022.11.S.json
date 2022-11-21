@@ -1,0 +1,4 @@
+stages = [
+  "deploy-spark",
+  "population-update" 
+  ]
