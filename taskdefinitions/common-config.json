@@ -1,0 +1,4 @@
+{
+  "name": "Update common config",
+  "command": "./bin/deploy/common-config.sh"
+}
