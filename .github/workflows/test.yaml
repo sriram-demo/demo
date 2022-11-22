@@ -33,7 +33,7 @@ jobs:
       run: |
         echo ${{ steps.out.outputs.matrix }}
   job:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.job_name }}
     needs: check_pr_labels
     runs-on: ubuntu-latest
     timeout-minutes: 360 # 6 hour timeout
@@ -41,7 +41,7 @@ jobs:
       matrix: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
       max-parallel: 1 # Run jobs serially
     steps:
-      - name: ${{ matrix.job_name }}
+      - name: ${{ matrix.name }}
         run: |
           echo ${{ matrix.command }}
           ${{ matrix.command }}
