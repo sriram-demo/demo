@@ -28,7 +28,7 @@ jobs:
       run: |
         echo ${{ steps.check_pr_labels.outputs.result }}
         echo "${{ steps.check_pr_labels.outputs.labels }}"
-        jobs="${{ steps.check_pr_labels.outputs.jobs }}"
+        jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo "matrix={\"include\":$jobs" >> $GITHUB_OUTPUT
   job:
     needs: check_pr_labels
