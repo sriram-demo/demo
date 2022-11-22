@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 360 # 6 hour timeout
     strategy:
       matrix:
-        job: ["foo","config","Debug"]
+        job: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
       max-parallel: 1 # Run jobs serially
     steps:
       - run: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
