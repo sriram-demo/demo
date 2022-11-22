@@ -33,6 +33,7 @@ jobs:
       run: |
         echo ${{ steps.out.outputs.matrix }}
   job:
+    name: ${{ matrix.name }}
     needs: check_pr_labels
     runs-on: ubuntu-latest
     timeout-minutes: 360 # 6 hour timeout
