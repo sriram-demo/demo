@@ -4,11 +4,11 @@ name: "Testing package"
 on:
   push:
     branches:
-      - master
+      - main
 jobs:        
   check_pr_labels:
     if: github.event_name == 'push' #
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: EBF Label check
     outputs:
       status: ${{ steps.check_pr_labels.outputs.result }}
