@@ -13,7 +13,7 @@ jobs:
     outputs:
       status: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
-      commands: ${{ steps.check_pr_labels.outputs.commands }}
+      jobs: ${{ steps.check_pr_labels.outputs.jobs }}
     steps:
     - name: Check
       id: check_pr_labels
