@@ -1,6 +1,6 @@
 {
-  stages: [
-  "deploy-spark",
-  "population-update" 
+  "stages": [
+      "deploy-spark",
+      "population-update" 
   ]
 }
