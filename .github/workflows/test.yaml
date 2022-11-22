@@ -28,6 +28,8 @@ jobs:
         echo ${{ steps.check_pr_labels.outputs.result }}
         echo "${{ steps.check_pr_labels.outputs.labels }}"
         echo "${{ steps.check_pr_labels.outputs.jobs }}"
+        echo "${{ fromJson(steps.check_pr_labels.outputs.jobs).name }}"
+        echo "${{ fromJson(steps.check_pr_labels.outputs.jobs).0.name }}"
   job:
     needs: check_pr_labels
     runs-on: ubuntu-latest
@@ -37,5 +39,5 @@ jobs:
         job: ${{ fromJson(needs.check_pr_labels.outputs.jobs).name }}
       max-parallel: 1 # Run jobs serially
     steps:
-      - run: ${{ fromJson(needs.check_pr_labels.outputs.commands).command }}
+      - run: ${{ fromJson(needs.check_pr_labels.outputs.jobs).command }}
         
