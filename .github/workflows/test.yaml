@@ -1,0 +1,32 @@
+
+name: "Testing package"
+
+on:
+  push:
+    branches:
+      - master
+jobs:        
+  check_pr_labels:
+    if: github.event_name == 'push' #
+    runs-on: self-hosted
+    name: EBF Label check
+    outputs:
+      status: ${{ steps.check_pr_labels.outputs.result }}
+      labels: ${{ steps.check_pr_labels.outputs.labels }}
+      commands: ${{ steps.check_pr_labels.outputs.commands }}
+    steps:
+    - name: Check
+      id: check_pr_labels
+      uses: Srirammkm/check-labels@main
+      with:
+        github-token: ${{ secrets.TOKEN }}
+        labels: '["adhoc-task"]'
+      continue-on-error: true
+      
+    - name: All Labels
+      run: |
+        echo ${{ steps.check_pr_labels.outputs.result }}
+        echo "${{ steps.check_pr_labels.outputs.labels }}"
+        echo "${{ steps.check_pr_labels.outputs.commands }}"
+
+    
