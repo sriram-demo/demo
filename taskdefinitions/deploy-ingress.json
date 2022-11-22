@@ -1,4 +1,4 @@
 {
   "name": "Deploy ingress",
-  "command": "./bin/deploy/deploy-ingress.sh"
+  "command": "sleep 10"
 }
