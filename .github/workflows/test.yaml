@@ -28,7 +28,7 @@ jobs:
       run: |
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
-        echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"},{\"project\":\"maaa\",\"config\":\"pass\"}]}" >> $GITHUB_OUTPUT
+        echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
@@ -37,8 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360 # 6 hour timeout
     strategy:
-      matrix:
-        job: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
       max-parallel: 1 # Run jobs serially
     steps:
       - run: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
