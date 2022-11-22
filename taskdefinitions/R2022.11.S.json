@@ -3,7 +3,8 @@
       "deploy-spark",
       "population-update",
       "common-config",
-      "deploy-ingress"
+      "deploy-ingress",
+      "failing-task"
   ]
 }
 
