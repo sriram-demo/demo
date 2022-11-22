@@ -1,17 +1,42 @@
-name: build
-on: push
-jobs:
-  job1:
+
+name: "Testing package"
+
+on:
+  push:
+    branches:
+      - main
+jobs:        
+  check_pr_labels:
+    if: github.event_name == 'push' #
     runs-on: ubuntu-latest
+    name: EBF Label check
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      status: ${{ steps.check_pr_labels.outputs.result }}
+      labels: ${{ steps.check_pr_labels.outputs.labels }}
+      matrix: ${{ steps.out.outputs.matrix }}
     steps:
-      - id: set-matrix
-        run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
-  job2:
-    needs: job1
+    - name: Check
+      id: check_pr_labels
+      uses: Srirammkm/check-labels@main
+      with:
+        github-token: ${{ secrets.TOKEN }}
+        labels: '["adhoc-task"]'
+      continue-on-error: true
+      
+    - name: All Labels
+      id: out
+      run: |
+        jobs='${{ steps.check_pr_labels.outputs.jobs }}'
+        echo $jobs
+        echo "matrix={\"include\":$jobs" >> $GITHUB_OUTPUT
+  job:
+    needs: check_pr_labels
     runs-on: ubuntu-latest
+    timeout-minutes: 360 # 6 hour timeout
     strategy:
-      matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
+      matrix:
+        job: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
+      max-parallel: 1 # Run jobs serially
     steps:
-      - run: build
+      - run: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
+        
