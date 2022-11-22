@@ -41,5 +41,8 @@ jobs:
       matrix: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
       max-parallel: 1 # Run jobs serially
     steps:
-      - run: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
+      - name: ${{ matrix.job_name }}
+        run: |
+          echo ${{ matrix.command }}
+          ${{ matrix.command }}
         
