@@ -13,7 +13,7 @@ jobs:
     outputs:
       status: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
-      jobs: ${{ steps.check_pr_labels.outputs.jobs }}
+      matrix: ${{ steps.out.outputs.matrix }}
     steps:
     - name: Check
       id: check_pr_labels
@@ -24,20 +24,23 @@ jobs:
       continue-on-error: true
       
     - name: All Labels
+      id: out
       run: |
         echo ${{ steps.check_pr_labels.outputs.result }}
         echo "${{ steps.check_pr_labels.outputs.labels }}"
         echo "${{ steps.check_pr_labels.outputs.jobs }}"
         echo "${{ fromJson(steps.check_pr_labels.outputs.jobs).name }}"
-        echo "${{ fromJson(steps.check_pr_labels.outputs.jobs)[0]["name"] }}"
+        jobs="${{ steps.check_pr_labels.outputs.jobs }}"
+        echo $jobs
+        echo "matrix={\"include\":$jobs" >> $GITHUB_OUTPUT
   job:
     needs: check_pr_labels
     runs-on: ubuntu-latest
     timeout-minutes: 360 # 6 hour timeout
     strategy:
       matrix:
-        job: ${{ fromJson(needs.check_pr_labels.outputs.jobs).name }}
+        job: ${{ fromJson(needs.check_pr_labels.outputs.matrix).name }}
       max-parallel: 1 # Run jobs serially
     steps:
-      - run: ${{ fromJson(needs.check_pr_labels.outputs.jobs).command }}
+      - run: ${{ fromJson(needs.check_pr_labels.outputs.matrix).command }}
         
