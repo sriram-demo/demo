@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: Check
       id: check_pr_labels
-      uses: Srirammkm/check-labels@test
+      uses: Srirammkm/check-labels@v0.6
       with:
         github-token: ${{ secrets.TOKEN }}
         labels: '["adhoc-task"]'
