@@ -28,7 +28,7 @@ jobs:
       run: |
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
-        echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+        echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"},{\"project\":\"pass\",\"config\":\"fail\"},{\"project\":\"good\",\"config\":\"bad\"}]}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
