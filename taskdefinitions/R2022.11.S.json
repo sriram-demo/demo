@@ -1,7 +1,9 @@
 {
   "stages": [
       "deploy-spark",
-      "population-update" 
+      "population-update",
+      "common-config",
+      "deploy-ingress"
   ]
 }
 
