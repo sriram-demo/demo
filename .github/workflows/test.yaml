@@ -53,8 +53,8 @@ jobs:
     steps:
       - name: ${{ matrix.name }}
         env:
-          cai_username: ${{ secret.CAI_ADMIN }}
-          cai_password: ${{ secret.CAI_PASSWORD }}
+          cai_username: ${{ secrets.CAI_ADMIN }}
+          cai_password: ${{ secrets.CAI_PASSWORD }}
         run: |
           echo ${{ matrix.command }}
           echo $cai_username
