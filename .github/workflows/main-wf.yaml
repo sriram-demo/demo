@@ -8,4 +8,4 @@ jobs:
   call-sub-workflow:
     uses: sriram-demo/demo/.github/workflows/trigger-test.yaml@main
     with:
-      release_type: mdmnext-prod-nac1
+      pod_id: mdmnext-prod-nac1
