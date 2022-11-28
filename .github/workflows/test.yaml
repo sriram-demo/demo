@@ -58,14 +58,8 @@ jobs:
       - name: Get Pod ID for master
         id: folder_id_master
         run: |
-         ids_master=''
-         for i in `git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "**/*" |  awk -F '/' '{print $1}' | sort | uniq -u`
-         do
-         ids_master+={'"id_master":"'$i'"},'
-         done
-         ids_master=${ids_master%?}
-         echo $ids_master
-         echo "pod_id=$ids_master" >> $GITHUB_OUTPUT
+         pod_id=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "**/*" |  awk -F '/' '{print $1}' | sort | uniq -u)
+         echo "pod_id=$pod_id" >> $GITHUB_OUTPUT
         continue-on-error: true
   job:
     name: ${{ matrix.job_name }}
