@@ -1,5 +1,5 @@
 
-name: "Trigger All Test ${{ github.event.inputs.pod_id }}"
+name: "Trigger All Test"
 
 on:
   workflow_dispatch:
@@ -15,9 +15,9 @@ on:
         - mdmnext-stg-pod1
         - mdmnext-stg-pod1s1
         
-jobs:        
+jobs:
   source_activate:
-    name: Source Activate
+    name: On ${{ github.event.inputs.pod_id }}
     runs-on: ${{ github.event.inputs.pod_id }}
     outputs:
       working-directory: ${{ steps.source_activate.outputs.working-directory }}
