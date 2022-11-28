@@ -1,0 +1,10 @@
+name: Start Pipeline
+on:
+  branch:
+    - main
+
+jobs:
+  call-sub-workflow:
+    uses: sriram-demo/demo/actions/workflows/trigger-test.yaml@main
+    with:
+      release_type: mdmnext-prod-nac1
