@@ -5,8 +5,15 @@ on:
   workflow_dispatch:
     inputs:
       pod_id:
+        type: choice
         description: 'Pod ID in which test has to triggered'     
         required: true
+        options:
+        - mdmnext-prod-aznttjp1
+        - mdmnext-prod-nac1
+        - mdmnext-prod-uk1
+        - mdmnext-stg-pod1
+        - mdmnext-stg-pod1s1
         
 jobs:        
   source_activate:
@@ -37,7 +44,7 @@ jobs:
           echo ::set-output name=working-directory::"build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm"
           echo ::set-output name=mail-host::"$(cat "$folder_id"/mdm/resources/helm/common-config-params.yaml | grep "mail_host" | awk '{print $2}' )"
           EOF
-        continue-on-error: false
+        continue-on-error: true
   c360_test_run:
     if: (needs.source_activate.result == 'success')
     name: C360 test
@@ -53,6 +60,7 @@ jobs:
           source activate "$folder_id" 
           cd ${{ env.working-directory}}
           ./bin/test/platform-tests.sh -t=C360_Certification_Tests
+        continue-on-error: true
            
   rdm_test_run:
     if: (needs.source_activate.result == 'success')
@@ -70,7 +78,7 @@ jobs:
           cd ${{ env.working-directory}}
           export RDM_TEST_PROFILE=reduced
           ./bin/test/rdm-integration-tests.sh
-        continue-on-error: false
+        continue-on-error: true
    
   shm_test_run:
     if: (needs.rdm_test_run.result == 'success' || needs.rdm_test_run.result == 'failure')
@@ -87,5 +95,6 @@ jobs:
           source activate "$folder_id" 
           cd ${{ env.working-directory}}
           ./bin/test/shm-integration-tests.sh
+        continue-on-error: true
   
         
