@@ -1,7 +1,8 @@
 name: Start Pipeline
 on:
-  branch:
-    - main
+  push:
+    branches:
+      - main
 
 jobs:
   call-sub-workflow:
