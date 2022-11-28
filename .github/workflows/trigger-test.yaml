@@ -1,5 +1,5 @@
 
-name: "Trigger All Test"
+name: "Trigger All Test ${{ github.event.inputs.pod_id }}"
 
 on:
   workflow_dispatch:
