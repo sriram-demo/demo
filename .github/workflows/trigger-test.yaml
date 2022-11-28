@@ -24,7 +24,7 @@ on:
 jobs:
   source_activate:
     name: On ${{ github.event.inputs.pod_id }}
-    runs-on: ${{ github.event.inputs.pod_id }}
+    runs-on: ubuntu-latest
     outputs:
       working-directory: ${{ steps.source_activate.outputs.working-directory }}
     steps:      
@@ -54,7 +54,7 @@ jobs:
   c360_test_run:
     if: (needs.source_activate.result == 'success')
     name: C360 test
-    runs-on: ${{ github.event.inputs.pod_id }}
+    runs-on: ubuntu-latest
     needs: [source_activate]
     steps:
       - name: running c360 test
@@ -71,7 +71,7 @@ jobs:
   rdm_test_run:
     if: (needs.source_activate.result == 'success')
     name: RDM test
-    runs-on: ${{ github.event.inputs.pod_id }}
+    runs-on: ubuntu-latest #${{ github.event.inputs.pod_id }}
     needs: [source_activate]
     steps:
       - name: running RDM test
@@ -89,7 +89,7 @@ jobs:
   shm_test_run:
     if: (needs.rdm_test_run.result == 'success' || needs.rdm_test_run.result == 'failure')
     name: SHM test
-    runs-on: ${{ github.event.inputs.pod_id }}
+    runs-on: ubuntu-latest #${{ github.event.inputs.pod_id }}
     needs: [rdm_test_run,source_activate]
     steps:
       - name: running SHM test
