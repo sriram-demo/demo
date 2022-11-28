@@ -2,6 +2,12 @@
 name: "Trigger All Test"
 
 on:
+  workflow_call:
+    inputs:
+      pod_id:
+        type: string
+        required: true
+        
   workflow_dispatch:
     inputs:
       pod_id:
