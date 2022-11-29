@@ -2,24 +2,51 @@
 name: "Trigger All Test"
 
 on:
-
   workflow_dispatch:
     inputs:
       pod_id:
-        type: choice
-        description: 'Pod ID in which test has to triggered'     
+        description: 'Pod ID in which test has to trigger'     
         required: true
         options:
+        - mdmnext-prod-apse1
+        - mdmnext-prod-apse1dr
+        - mdmnext-prod-azemc1
+        - mdmnext-prod-azemc1dr
         - mdmnext-prod-aznttjp1
+        - mdmnext-prod-aznttjp1dr
+        - mdmnext-prod-azusw3
+        - mdmnext-prod-azusw3dr
+        - mdmnext-prod-emw1
+        - mdmnext-prod-emw1dr
         - mdmnext-prod-nac1
+        - mdmnext-prod-nac1dr
         - mdmnext-prod-uk1
+        - mdmnext-prod-uk1dr
+        - mdmnext-prod-use2
+        - mdmnext-prod-use2dr
+        - mdmnext-prod-use2s1
+        - mdmnext-prod-use4
+        - mdmnext-prod-use4dr
+        - mdmnext-prod-use4s1
+        - mdmnext-prod-use6
+        - mdmnext-prod-use6dr
+        - mdmnext-prod-usw3
+        - mdmnext-prod-usw3dr
+        - mdmnext-prv-c360
+        - mdmnext-prv-c360s1
+        - mdmnext-prv-c360s2
+        - mdmnext-stage-azusw1
+        - mdmnext-stage-azusw1dr
+        - mdmnext-stage-pod1s2
         - mdmnext-stg-pod1
+        - mdmnext-stg-pod1dr
         - mdmnext-stg-pod1s1
+        - mdmnext-stg-pod1s1dr
         
-jobs:
+jobs:        
   source_activate:
-    name: On ${{ github.event.inputs.pod_id }}
-    runs-on: ubuntu-latest
+    name: Testing on ${{ github.event.inputs.pod_id }}
+    runs-on: ${{ github.event.inputs.pod_id }}
     outputs:
       working-directory: ${{ steps.source_activate.outputs.working-directory }}
     steps:      
@@ -43,14 +70,26 @@ jobs:
           ./mops build mdm
           cd build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm
           echo ::set-output name=working-directory::"build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm"
-          echo ::set-output name=mail-host::"$(cat "$folder_id"/mdm/resources/helm/common-config-params.yaml | grep "mail_host" | awk '{print $2}' )"
           EOF
+        continue-on-error: false
+  initialize_runners:
+    if: github.event_name == 'push'
+    name: Initialize Dynamic Runners
+    runs-on: ${{ github.event.inputs.pod_id }}
+    needs: [source_activate]
+    steps:
+      - name: Initialize Runners
+        env:
+          TERM: xterm
+        run: |
+          sudo systemctl start actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
+          sudo systemctl status actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
         continue-on-error: true
   c360_test_run:
     if: (needs.source_activate.result == 'success')
     name: C360 test
-    runs-on: ubuntu-latest
-    needs: [source_activate]
+    runs-on: ${{ github.event.inputs.pod_id }}
+    needs: [source_activate,initialize_runners]
     steps:
       - name: running c360 test
         env:
@@ -66,8 +105,8 @@ jobs:
   rdm_test_run:
     if: (needs.source_activate.result == 'success')
     name: RDM test
-    runs-on: ubuntu-latest #${{ github.event.inputs.pod_id }}
-    needs: [source_activate]
+    runs-on: ${{ github.event.inputs.pod_id }}
+    needs: [source_activate,initialize_runners]
     steps:
       - name: running RDM test
         env:
@@ -79,12 +118,12 @@ jobs:
           cd ${{ env.working-directory}}
           export RDM_TEST_PROFILE=reduced
           ./bin/test/rdm-integration-tests.sh
-        continue-on-error: true
+        continue-on-error: false
    
   shm_test_run:
     if: (needs.rdm_test_run.result == 'success' || needs.rdm_test_run.result == 'failure')
     name: SHM test
-    runs-on: ubuntu-latest #${{ github.event.inputs.pod_id }}
+    runs-on: ${{ github.event.inputs.pod_id }}
     needs: [rdm_test_run,source_activate]
     steps:
       - name: running SHM test
@@ -96,6 +135,21 @@ jobs:
           source activate "$folder_id" 
           cd ${{ env.working-directory}}
           ./bin/test/shm-integration-tests.sh
+  
+  terminate_runners:
+    if: |
+      always() &&
+      github.event_name == 'push' && 
+      (needs.shm_test_run.result == 'success' || needs.shm_test_run.result == 'failure' || needs.shm_test_run.result == 'skipped' )
+    name: Terminate Dynamic Runners
+    runs-on: ${{ github.event.inputs.pod_id }}
+    needs: [shm_test_run]
+    steps:
+      - name: Terminate Runners
+        env:
+          TERM: xterm
+        run: |
+          sudo systemctl stop actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
         continue-on-error: true
   
         
