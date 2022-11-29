@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       pod_id:
+        type: choice
         description: 'Pod ID in which test has to trigger'     
         required: true
         options:
