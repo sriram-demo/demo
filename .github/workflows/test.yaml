@@ -57,17 +57,17 @@ jobs:
     name: ${{ matrix.job_name }}
     needs: [check_pr_labels]
     runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.folder_id_master }}
-    environment:
-      name: R2022.11.S
+#     environment:
+#       name: R2022.11.S
     timeout-minutes: 360 # 6 hour timeout
     strategy:
       matrix: ${{ fromJson(needs.check_pr_labels.outputs.matrix) }}
       max-parallel: 1 # Run jobs serially
     steps:
       - name: ${{ matrix.name }}
-        env:
-          cai_username: ${{ secrets.CAI_ADMIN }}
-          cai_password: ${{ secrets.CAI_PASSWORD }}
+#         env:
+#           cai_username: ${{ secrets.CAI_ADMIN }}
+#           cai_password: ${{ secrets.CAI_PASSWORD }}
         run: |
           echo ${{ matrix.command }}
           echo $cai_username
