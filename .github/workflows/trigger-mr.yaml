@@ -2,7 +2,7 @@
 name: "Monthly Release Manual"
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
     inputs:
       pod_id:
         type: choice
