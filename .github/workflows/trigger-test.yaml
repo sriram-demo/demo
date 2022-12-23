@@ -1,6 +1,6 @@
 
 name: "Trigger All Test"
-run-name: Deploy by @${{ github.actor }}
+run-name: Testing on ${{ github.event.inputs.pod_id }}
 
 on:
   workflow_dispatch:
