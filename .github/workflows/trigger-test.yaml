@@ -1,6 +1,6 @@
 
 name: "Trigger All Test"
-run-name: Testing on ${{ github.event.inputs.pod_id }}
+run-name: Testing on ${{ github.path }}
 
 on:
   workflow_dispatch:
