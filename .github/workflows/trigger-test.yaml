@@ -1,5 +1,6 @@
 
 name: "Trigger All Test"
+run-name: Deploy by @${{ github.actor }}
 
 on:
   workflow_dispatch:
