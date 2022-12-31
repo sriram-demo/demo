@@ -61,7 +61,7 @@ jobs:
       uses: Srirammkm/check-labels@main
       with:
         github-token: ${{ secrets.TOKEN }}
-        labels: '["adhoc-task"]'
+        release-file: ${{ github.event.inputs.release }}
       continue-on-error: true
       
     - name: All Labels
