@@ -48,9 +48,8 @@ on:
         
 jobs:        
   check_pr_labels:
-    if: github.event_name == 'push' #
     runs-on: ubuntu-latest
-    name: EBF Label check
+    name: Reading Files
     outputs:
       status: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
@@ -74,7 +73,6 @@ jobs:
       run: |
         echo ${{ steps.out.outputs.matrix }}
   getpod_master:
-    if: github.event_name == 'push'
     name: Get POD ID
     runs-on: ubuntu-latest
     needs: check_pr_labels
