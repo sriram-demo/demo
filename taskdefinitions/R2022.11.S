@@ -1,4 +1,7 @@
-stages:
-  - deploy-spark
-  - population-update
-  - common-config
+{
+  "stages": [
+      "deploy-spark",
+      "population-update",
+      "common-config"
+  ]
+}
