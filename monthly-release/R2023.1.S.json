@@ -1,5 +1,6 @@
 {
   "stages": [
+      "cai-pd",
       "deploy-spark",
       "population-update",
       "common-config"
