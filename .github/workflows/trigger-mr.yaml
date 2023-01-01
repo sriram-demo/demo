@@ -1,5 +1,5 @@
 
-name: "Monthly Release Manual"
+name: "Monthly Release Pipeline"
 run-name: Deploying on ${{ github.event.inputs.pod_id }}
 on:
   workflow_dispatch:
