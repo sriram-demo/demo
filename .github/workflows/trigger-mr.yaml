@@ -30,7 +30,7 @@ on:
         - mdmnext-stg-pod1
         - mdmnext-stg-pod1s1
       cai_pd_status:
-        description: "Is CAI Post deploy required?"
+        description: "Is CAI Post deploy required"
         type: boolean
         required: true
       cai_username:
@@ -73,6 +73,7 @@ jobs:
       run: |
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
+        echo ${{ github.event.inputs.cai_pd_status }}
         echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
@@ -100,7 +101,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: master
           fetch-depth: 0     
           token: ${{ github.token }}   
           
