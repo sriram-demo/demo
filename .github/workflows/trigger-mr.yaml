@@ -33,6 +33,7 @@ on:
         description: "CAI Username"
         required: true
       cai_password:
+        type: secret
         description: "CAI Password"
         required: true
       release:
