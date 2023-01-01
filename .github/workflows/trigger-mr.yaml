@@ -50,7 +50,7 @@ on:
 jobs:        
   check_pr_labels:
     runs-on: ubuntu-latest
-    name: Reading Files
+    name: Generating Deployment Stages
     outputs:
       status: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
