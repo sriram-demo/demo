@@ -143,6 +143,8 @@ jobs:
         continue-on-error: true
 
   deployment_stages:
+    if: always() &&
+        (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
     name: ${{ matrix.job_name }}
     needs: [source_activate,cai_pd,generate_matrix]
     runs-on: ubuntu-latest
