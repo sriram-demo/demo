@@ -30,7 +30,7 @@ on:
         - mdmnext-stg-pod1
         - mdmnext-stg-pod1s1
       cai_pd_status:
-        description: "Is CAI Post deploy required"
+        description: "Is CAI Post deploy required?"
         type: boolean
         required: true
       cai_username:
