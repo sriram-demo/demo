@@ -124,7 +124,7 @@ jobs:
         continue-on-error: true
         
   cai_pd:
-    if: ${{ github.event.inputs.cai_pd_required }} == "true"
+    if: github.event.inputs.cai_pd_required == 'true'
     name: CAI Post Deployment
     runs-on: ubuntu-latest
     needs: [source_activate]
