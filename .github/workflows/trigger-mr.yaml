@@ -144,7 +144,7 @@ jobs:
       matrix:
         runners: [ubuntu-16.04, ubuntu-latest]
         jobs: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
-      max-parallel: 1 # Run jobs serially
+      max-parallel: 2 # Run jobs serially
     steps:
       - name: ${{ matrix.jobs.name }}
         env:
