@@ -65,6 +65,6 @@ export VAULT_PREFIX="${VAULT_BACKEND}/staging/mdmcloud/mdmnext/common"
 export VAULT_REGION=us-west-2
 export VAULT_ROLE="staging-mdmcloud-mdmnex"
 export WORKING_SET_BRANCH=2022-09-S-Release_prod_ready_0
-export SWITCH_HELM="tru"
+export SWITCH_HELM="true"
 export CT_PROMETHEUS_URL="https://prometheus.mdm-shrd-eks-prv.usw2.cloudtrust.rocks"
 #staging-ebf3
