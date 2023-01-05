@@ -28,6 +28,7 @@ jobs:
       label_check: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
       matrix: ${{ steps.generate.outputs.matrix }}
+      userconfirmation: ${{ steps.check_pr_labels.outputs.userconfirmation }}
     steps:
     - name: Check
       id: check_pr_labels
@@ -131,7 +132,7 @@ jobs:
           cd ${{ env.working-directory}}
           ./bin/tools/run-cai-post-deploy.sh
         continue-on-error: true
-
+  
   deployment_stages:
     if: always() &&
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
@@ -139,7 +140,7 @@ jobs:
     needs: [source_activate,cai_pd,generate_matrix,getpod_master]
     runs-on: ${{ needs.getpod_master.outputs.pod_id }}
     environment:
-      name: ${{ github.event.inputs.release }}-${{ github.event.inputs.userconfirmation }}
+      name: ${{ needs.generate_matrix.outputs.userconfirmation }}
     timeout-minutes: 360 # 6 hour timeout
     strategy:
       matrix: ${{ fromJson(needs.generate_matrix.outputs.matrix) }}
