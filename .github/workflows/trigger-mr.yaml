@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate_matrix
     outputs:
-      folder_id_master: ${{ steps.folder_id_master.outputs.pod_id }}
+      pod_id: ${{ steps.folder_id_master.outputs.pod_id }}
     steps:      
       - name: Checkout
         uses: actions/checkout@v3
@@ -83,8 +83,8 @@ jobs:
         continue-on-error: true
   source_activate:
     name: Source Activate
-    runs-on: ubuntu-latest
-    needs: [initialize_runners]
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    needs: [initialize_runners,getpod_master]
     outputs:
       working-directory: ${{ steps.source_activate.outputs.working-directory }}
       mail-host: ${{ steps.source_activate.outputs.mail-host }}
@@ -115,10 +115,9 @@ jobs:
         continue-on-error: true
         
   cai_pd:
-    if: github.event.inputs.cai_pd_required == 'true'
     name: CAI Post Deployment
-    runs-on: ubuntu-latest
-    needs: [source_activate]
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    needs: [source_activate,getpod_master]
     steps:
       - name: CAI Post Deployment
         env:
@@ -137,8 +136,8 @@ jobs:
     if: always() &&
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
     name: ${{ matrix.job_name }}
-    needs: [source_activate,cai_pd,generate_matrix]
-    runs-on: ubuntu-latest
+    needs: [source_activate,cai_pd,generate_matrix,getpod_master]
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
     environment:
       name: ${{ github.event.inputs.release }}-${{ github.event.inputs.userconfirmation }}
     timeout-minutes: 360 # 6 hour timeout
