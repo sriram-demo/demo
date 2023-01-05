@@ -32,7 +32,7 @@ jobs:
     steps:
     - name: Check
       id: check_pr_labels
-      uses: Srirammkm/check-labels@monthly-release
+      uses: Srirammkm/check-labels@v0.3mr
       with:
         github-token: ${{ secrets.TOKEN }}
         labels: '["monthly-release"]'
