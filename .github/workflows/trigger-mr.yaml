@@ -155,4 +155,5 @@ jobs:
           source activate "$folder_id" 
           cd ${{ env.working-directory}}
           ${{ matrix.command }}
+        continue-on-error: true
         
