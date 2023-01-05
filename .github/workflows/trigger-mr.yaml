@@ -84,7 +84,7 @@ jobs:
         continue-on-error: true
   source_activate:
     name: Source Activate
-    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
     needs: [initialize_runners,getpod_master]
     outputs:
       working_directory: ${{ steps.source_activate.outputs.working_directory }}
@@ -134,7 +134,7 @@ jobs:
   deployment_stages:
     if: always() &&
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
-    name: ${{ matrix.jobs.job_name }}
+    name: ${{ matrix.runners }}-${{ matrix.jobs.job_name }}
     needs: [source_activate,cai_pd,generate_matrix,getpod_master]
     runs-on: ${{ matrix.runners }}
     environment:
