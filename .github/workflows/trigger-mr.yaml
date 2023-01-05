@@ -1,62 +1,29 @@
-
 name: "Monthly Release Pipeline"
-run-name: Deploying on ${{ github.event.inputs.pod_id }}
 on:
-  workflow_dispatch:
-    inputs:
-      pod_id:
-        type: choice
-        description: 'Pod ID in which BPR has to trigger'     
-        required: true
-        options:
-        - mdmnext-prod-apse1
-        - mdmnext-prod-azemc1
-        - mdmnext-prod-aznttjp1
-        - mdmnext-prod-azusw3
-        - mdmnext-prod-emw1
-        - mdmnext-prod-nac1
-        - mdmnext-prod-uk1
-        - mdmnext-prod-use2
-        - mdmnext-prod-use2s1
-        - mdmnext-prod-use4
-        - mdmnext-prod-use4s1
-        - mdmnext-prod-use6
-        - mdmnext-prod-usw3
-        - mdmnext-prv-c360
-        - mdmnext-prv-c360s1
-        - mdmnext-prv-c360s2
-        - mdmnext-stage-azusw1
-        - mdmnext-stage-pod1s2
-        - mdmnext-stg-pod1
-        - mdmnext-stg-pod1s1
-      cai_pd_required:
-        description: "Is CAI Post deploy required"
-        type: boolean
-        required: true
-      cai_username:
-        description: "CAI Username"
-        required: false
-      cai_password:
-        type: secret
-        description: "CAI Password"
-        required: false
-      release:
-        description: "Please enter release file name"
-        required: true
-      userconfirmation:
-        type: choice
-        description: "Confirmation after each stage"
-        required: true
-        options:
-        - manual
-        - auto
-        
+  push:
+    paths:
+      - mdmnext-stg-pod1/**/*
+      - mdmnext-stg-pod1s1/**/*
+      - mdmnext-prv-*/**/*
+      - mdmnext-prod-uk1/**/*
+      - mdmnext-prod-apse1/**/*
+      - mdmnext-prod-emw1/**/*
+      - mdmnext-prod-nac1/**/*
+      - mdmnext-prod-use2/**/*
+      - mdmnext-prod-use4/**/*
+      - mdmnext-prod-use4s1/**/*
+      - mdmnext-prod-usw3/**/*
+      - mdmnext-prod-use6/**/*
+      - mdmnext-prod-azemc1/**/*
+      - mdmnext-prod-azusw3/**/*
+      - mdmnext-prod-aznttjp1/**/*
+      - mdmnext-stage-azusw1/**/* 
 jobs:        
   generate_matrix:
     runs-on: ubuntu-latest
     name: Generating Deployment Stages
     outputs:
-      status: ${{ steps.check_pr_labels.outputs.result }}
+      label_check: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
       matrix: ${{ steps.generate.outputs.matrix }}
     steps:
@@ -65,7 +32,7 @@ jobs:
       uses: Srirammkm/check-labels@main
       with:
         github-token: ${{ secrets.TOKEN }}
-        release-file: ${{ github.event.inputs.release }}
+        labels: '["monthly-release"]'
       continue-on-error: true
       
     - name: All Labels
@@ -78,6 +45,28 @@ jobs:
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
+  getpod_master:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.generate_matrix.outputs.label_check == 'true'
+    name: Get POD ID
+    runs-on: self-hosted
+    needs: generate_matrix
+    outputs:
+      folder_id_master: ${{ steps.folder_id_master.outputs.pod_id }}
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0     
+          token: ${{ github.token }}    
+
+      - name: Get Pod ID for master
+        id: folder_id_master
+        run: |
+         pod_id=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "**/*" |  awk -F '/' '{print $1}' | sort | uniq -u | grep -v dr)
+         echo $pod_id
+         echo "pod_id=$pod_id" >> $GITHUB_OUTPUT
+        continue-on-error: true
   initialize_runners:
     name: Initialize Dynamic Runners
     runs-on: ubuntu-latest
