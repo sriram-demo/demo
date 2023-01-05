@@ -27,7 +27,7 @@ jobs:
     outputs:
       label_check: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
-      jobs: ${{ steps.generate.outputs.jobs }}
+      matrix: ${{ steps.generate.outputs.matrix }}
       userconfirmation: ${{ steps.check_pr_labels.outputs.userconfirmation }}
     steps:
     - name: Check
@@ -44,7 +44,7 @@ jobs:
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
         echo ${{ steps.check_pr_labels.outputs.labels }}
-        echo "jobs=$jobs" >> $GITHUB_OUTPUT
+        echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
@@ -73,7 +73,7 @@ jobs:
   initialize_runners:
     name: Initialize Dynamic Runners
     runs-on: ubuntu-latest
-    needs: [generate_matrix,getpod_master]
+    needs: [generate_matrix]
     steps:
       - name: Initialize Runners
         env:
@@ -84,7 +84,7 @@ jobs:
         continue-on-error: true
   source_activate:
     name: Source Activate
-    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
     needs: [initialize_runners,getpod_master]
     outputs:
       working_directory: ${{ steps.source_activate.outputs.working_directory }}
@@ -113,17 +113,20 @@ jobs:
           echo "working_directory=$working_dir" >> $GITHUB_OUTPUT
           echo "mail_host=$mail_host" >> $GITHUB_OUTPUT
           EOF
-        continue-on-error: true        
+        continue-on-error: true
+        
   cai_pd:
     if: contains(needs.generate_matrix.outputs.labels, 'cai-pd')
     name: CAI Post Deployment
     runs-on: ${{ needs.getpod_master.outputs.pod_id }}
-    needs: [source_activate,getpod_master,generate_matrix]
+    needs: [source_activate,getpod_master]
     steps:
       - name: CAI Post Deployment
         env:
           folder_id: ${{ github.event.inputs.pod_id }}
           working_directory: ${{ needs.source_activate.outputs.working_directory }}
+          CAI_ADMIN_USERNAME: ${{ github.event.inputs.cai_username }}
+          CAI_ADMIN_PASSWORD: ${{ github.event.inputs.cai_password }}
           TERM: xterm
         run: |
           source activate "$folder_id" 
@@ -134,28 +137,24 @@ jobs:
   deployment_stages:
     if: always() &&
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
-    name: ${{ matrix.runners }}-${{ matrix.jobs.job_name }}
+    name: ${{ matrix.job_name }}
     needs: [source_activate,cai_pd,generate_matrix,getpod_master]
-    runs-on: ${{ matrix.runners }}
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
     environment:
       name: ${{ needs.generate_matrix.outputs.userconfirmation }}
     timeout-minutes: 360 # 6 hour timeout
     strategy:
-      matrix:
-        runners: [ubuntu-16.04, ubuntu-latest]
-        jobs: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
-      max-parallel: 2 # Run jobs serially
+      matrix: ${{ fromJson(needs.generate_matrix.outputs.matrix) }}
+      max-parallel: 1 # Run jobs serially
     steps:
-      - name: ${{ matrix.jobs.name }}
+      - name: ${{ matrix.name }}
         env:
           TERM: xterm
           folder_id: ${{ github.event.inputs.pod_id }}
           working_directory: ${{ needs.source_activate.outputs.working_directory }}
-          mail_host: ${{ needs.source_activate.outputs.mail_host }}
         run: |
-          echo $working_directory
-          echo $mail_host
           source activate "$folder_id" 
           cd ${{ env.working_directory}}
-          ${{ matrix.jobs.command }}
+          ${{ matrix.command }}
+        continue-on-error: true
         
