@@ -50,7 +50,7 @@ jobs:
   getpod_master:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.generate_matrix.outputs.label_check == 'true'
     name: Get POD ID
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: generate_matrix
     outputs:
       folder_id_master: ${{ steps.folder_id_master.outputs.pod_id }}
