@@ -17,7 +17,9 @@ on:
       - mdmnext-prod-azemc1/**/*
       - mdmnext-prod-azusw3/**/*
       - mdmnext-prod-aznttjp1/**/*
-      - mdmnext-stage-azusw1/**/* 
+      - mdmnext-stage-azusw1/**/*
+    branches:
+      - main
 jobs:        
   generate_matrix:
     runs-on: ubuntu-latest
@@ -40,7 +42,7 @@ jobs:
       run: |
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
-        echo ${{ github.event.inputs.cai_pd_required }}
+        echo ${{ steps.check_pr_labels.outputs.labels }}
         echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
@@ -56,7 +58,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: master
+          ref: main
           fetch-depth: 0     
           token: ${{ github.token }}    
 
