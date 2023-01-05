@@ -118,7 +118,7 @@ jobs:
   cai_pd:
     if: contains(needs.generate_matrix.outputs.labels, 'cai-pd')
     name: CAI Post Deployment
-    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
     needs: [source_activate,getpod_master]
     steps:
       - name: CAI Post Deployment
@@ -139,7 +139,7 @@ jobs:
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
     name: ${{ matrix.job_name }}
     needs: [source_activate,cai_pd,generate_matrix,getpod_master]
-    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
     environment:
       name: ${{ needs.generate_matrix.outputs.userconfirmation }}
     timeout-minutes: 360 # 6 hour timeout
