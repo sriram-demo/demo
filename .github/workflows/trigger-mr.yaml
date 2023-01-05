@@ -27,7 +27,7 @@ jobs:
     outputs:
       label_check: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
-      matrix: ${{ steps.generate.outputs.matrix }}
+      jobs: ${{ steps.generate.outputs.jobs }}
       userconfirmation: ${{ steps.check_pr_labels.outputs.userconfirmation }}
     steps:
     - name: Check
@@ -44,7 +44,7 @@ jobs:
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
         echo ${{ steps.check_pr_labels.outputs.labels }}
-        echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
+        echo "jobs=$jobs" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
@@ -84,7 +84,7 @@ jobs:
         continue-on-error: true
   source_activate:
     name: Source Activate
-    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
     needs: [initialize_runners,getpod_master]
     outputs:
       working_directory: ${{ steps.source_activate.outputs.working_directory }}
@@ -143,7 +143,7 @@ jobs:
     strategy:
       matrix:
         runners: [ubuntu-16.04, ubuntu-latest]
-        jobs: ${{ needs.generate_matrix.outputs.matrix }}
+        jobs: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
       max-parallel: 1 # Run jobs serially
     steps:
       - name: ${{ matrix.jobs.name }}
