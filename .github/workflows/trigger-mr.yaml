@@ -84,7 +84,7 @@ jobs:
         continue-on-error: true
   source_activate:
     name: Source Activate
-    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
     needs: [initialize_runners,getpod_master]
     outputs:
       working_directory: ${{ steps.source_activate.outputs.working_directory }}
