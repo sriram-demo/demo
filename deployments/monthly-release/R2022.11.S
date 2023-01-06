@@ -1,4 +1,4 @@
 stages:
   - deploy-spark
-  - population-update
+  - trigger-test
   - common-config
