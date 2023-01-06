@@ -13,6 +13,8 @@ purple=$(tput setaf 125) && export purple
 reset=$(tput sgr0) && export reset
 purple=$(tput setaf 125)
 
+echo "Triggering test"
+sleep 5
 gh workflow run $TEST_ACTION_FILE -f pod_id=$POD_ID --repo $REPO_NAME
 if [[ $? -eq 0 ]]; then
     echo "Test Triggered successfully"
