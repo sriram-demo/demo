@@ -98,7 +98,7 @@ jobs:
           TERM: xterm
           working-directory: ${{ needs.source_activate.outputs.working-directory }}
         run: |
-          sleep 50
+          echo ${{ github.actor }}
         continue-on-error: true
            
   rdm_test_run:
