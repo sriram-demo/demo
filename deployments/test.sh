@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 REPO_NAME="sriram-demo/demo"
 TEST_ACTION_FILE="trigger-test.yaml"
