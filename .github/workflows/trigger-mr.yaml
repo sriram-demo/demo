@@ -134,19 +134,17 @@ jobs:
   deployment_stages:
     if: always() &&
         (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
-    name: ${{ matrix.runners }}-${{ matrix.jobs.job_name }}
+    name: ${{ matrix.job_name }}
     needs: [source_activate,cai_pd,generate_matrix,getpod_master]
     runs-on: ${{ matrix.runners }}
     environment:
       name: ${{ needs.generate_matrix.outputs.userconfirmation }}
     timeout-minutes: 360 # 6 hour timeout
     strategy:
-      matrix:
-        runners: [ubuntu-16.04, ubuntu-latest]
-        jobs: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
-      max-parallel: 2 # Run jobs serially
+      matrix: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
+      max-parallel: 1 # Run jobs serially
     steps:
-      - name: ${{ matrix.jobs.name }}
+      - name: ${{ matrix.name }}
         env:
           TERM: xterm
           folder_id: ${{ github.event.inputs.pod_id }}
@@ -157,5 +155,5 @@ jobs:
           echo $mail_host
           source activate "$folder_id" 
           cd ${{ env.working_directory}}
-          ${{ matrix.jobs.command }}
+          ${{ matrix.command }}
         
