@@ -67,4 +67,4 @@ export VAULT_ROLE="staging-mdmcloud-mdmnext"
 export WORKING_SET_BRANCH="2022-11-S-Release_stage_ready_7"
 export SWITCH_HELM="true"
 export CT_PROMETHEUS_URL="https://prometheus.mdm-shrd-eks-prv.usw2.cloudtrust.rocks"
-#staging-ebf3
+#staging-ebf4
