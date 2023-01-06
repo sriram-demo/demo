@@ -73,7 +73,6 @@ jobs:
           TERM: xterm
           GH_TOKEN: ${{ github.token }}
         run: |
-          ls
           ${{ matrix.command }}
           
 #  getpod_master:
