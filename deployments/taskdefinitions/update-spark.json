@@ -1,0 +1,4 @@
+{
+    "name": "Update spark",
+    "command": "./bin/deploy/spark.sh"
+}

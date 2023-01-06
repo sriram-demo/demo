@@ -1,0 +1,4 @@
+{
+    "name": "Update MDM service Resources",
+    "command": "./bin/deploy/service-resources.sh all"
+}

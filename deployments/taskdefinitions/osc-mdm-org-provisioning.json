@@ -1,0 +1,4 @@
+{
+    "name": "Trigger CAI One shot containers for mdm-org-provisioning",
+    "command": "./bin/tools/rdm-batch.sh --s=mdm-org-provisioning --e=${CAI_INTERNAL_SERVICE_URL}:443/activebpel-cert/services/REST/upgradeAVRules"
+}

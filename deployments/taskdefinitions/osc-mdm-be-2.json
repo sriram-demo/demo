@@ -1,0 +1,4 @@
+{
+    "name": "Trigger One shot containers for mdm-business-entity 2",
+    "command": "./bin/tools/rdm-batch.sh --s=mdm-business-entity --e=https://business-entity:8443/internal/api/v1/data/fix/all/orgs"
+}

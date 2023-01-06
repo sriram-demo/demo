@@ -1,0 +1,4 @@
+{
+    "name": "Update Telegraf",
+    "command": "./bin/deploy/telegraf.sh restart"
+}

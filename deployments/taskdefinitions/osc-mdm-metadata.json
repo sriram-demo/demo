@@ -1,0 +1,4 @@
+{
+    "name": "Trigger One shot containers for mdm-metadata",
+    "command": "./bin/tools/rdm-batch.sh --s=mdm-metadata --e=https://metadata:8443/internal/api/v2/upgrade/"
+}

@@ -1,0 +1,22 @@
+stages:
+  - population-update
+  - update-spark
+  - common-config
+  - update-ingress-controller
+  - update-mdm-service-resources
+  - update-auth-md
+  - check-ft-pr
+  - get-orgs
+  - osc-mdm-org-provisioning
+  - osc-mdm-metadata
+  - osc-mdm-match-ng-config
+  - osc-mdm-rdm-service
+  - check-dis
+  - c360-test
+  - rdm-test
+  - shm-test
+  - update-telegraf
+  - update-prometheus
+  - update-alerts
+  - osc-mdm-be-1
+  - osc-mdm-be-2

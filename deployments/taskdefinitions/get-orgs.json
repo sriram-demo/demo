@@ -1,0 +1,4 @@
+{
+    "name": "Get the number of provisioned ORGs",
+    "command": "./bin/tools/get-provisioned-orgs.sh --a=org_count"
+}

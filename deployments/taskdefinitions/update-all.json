@@ -1,0 +1,4 @@
+{
+    "name": "Update MDM Services",
+    "command": "./update.sh all"
+}

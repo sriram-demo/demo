@@ -1,0 +1,4 @@
+{
+    "name": "Update MDM Authorization & Metadata",
+    "command": "./update.sh authorization,metadata"
+}

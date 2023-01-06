@@ -1,4 +1,0 @@
-{
-  "name": "Deploy ingress",
-  "command": "sleep 10"
-}

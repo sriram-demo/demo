@@ -1,0 +1,4 @@
+{
+    "name": "Trigger c360-platform-tests",
+    "command": "./bin/test/platform-tests.sh -t=C360_Certification_Tests"
+}

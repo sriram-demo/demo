@@ -1,0 +1,4 @@
+{
+    "name": "Update Alerts",
+    "command": "./bin/deploy/alerts.sh"
+}

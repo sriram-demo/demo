@@ -1,0 +1,4 @@
+{
+    "name": "Trigger rdm-tests",
+    "command": "./bin/test/rdm-integration-tests.sh"
+}

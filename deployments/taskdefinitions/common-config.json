@@ -1,4 +1,4 @@
 {
-  "name": "Update common config",
-  "command": "sleep 10"
+    "name": "Update common-config and verify",
+    "command": "./bin/deploy/common-config.sh restart && sleep 60;bin/tools/consul-validator.sh -v spark-images"
 }

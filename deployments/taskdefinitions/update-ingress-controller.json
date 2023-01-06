@@ -1,0 +1,4 @@
+{
+    "name": "Update Ingress Controller",
+    "command": "./bin/deploy/ingress-controller.sh restart"
+}

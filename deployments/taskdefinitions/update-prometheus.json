@@ -1,0 +1,4 @@
+{
+    "name": "Update Prometheus",
+    "command": "./bin/deploy/prometheus.sh restart"
+}

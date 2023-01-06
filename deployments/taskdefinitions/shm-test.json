@@ -1,0 +1,4 @@
+{
+    "name": "Trigger shm-tests",
+    "command": "./bin/test/shm-integration-tests.sh"
+}

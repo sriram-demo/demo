@@ -1,0 +1,4 @@
+{
+    "name": "Trigger One shot containers for mdm-match-ng-config",
+    "command": "./bin/tools/rdm-batch.sh --s=mdm-match-ng-config --e=https://match-ng-config:8443/internal/api/v1/upgrade"
+}

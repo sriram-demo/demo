@@ -1,4 +1,4 @@
 {
-  "name": "Update population files and list",
-  "command": "sleep 10"
+    "name": "Update population files and list",
+    "command": "bin/tools/manage-population-files.sh -a=copy;bin/tools/manage-population-files.sh -a=list"
 }

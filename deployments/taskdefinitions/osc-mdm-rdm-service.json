@@ -1,0 +1,4 @@
+{
+    "name": "Trigger One shot containers for mdm-rdm-service",
+    "command": "./bin/tools/rdm-batch.sh --s=mdm-rdm-service --e=https://rdm-service:8443/internal/v1/rdm/migrate/model"
+}
