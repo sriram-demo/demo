@@ -75,7 +75,6 @@ jobs:
           EOF
         continue-on-error: true
   initialize_runners:
-    if: github.event_name == 'push'
     name: Initialize Dynamic Runners
     runs-on: ubuntu-latest
     needs: [source_activate]
@@ -134,8 +133,7 @@ jobs:
   
   terminate_runners:
     if: |
-      always() &&
-      github.event_name == 'push' && 
+      always() && 
       (needs.shm_test_run.result == 'success' || needs.shm_test_run.result == 'failure' || needs.shm_test_run.result == 'skipped' )
     name: Terminate Dynamic Runners
     runs-on: ubuntu-latest
