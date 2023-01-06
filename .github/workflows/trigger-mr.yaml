@@ -151,9 +151,5 @@ jobs:
           working_directory: ${{ needs.source_activate.outputs.working_directory }}
           mail_host: ${{ needs.source_activate.outputs.mail_host }}
         run: |
-          echo $working_directory
-          echo $mail_host
-          source activate "$folder_id" 
-          cd ${{ env.working_directory}}
           ${{ matrix.command }}
         
