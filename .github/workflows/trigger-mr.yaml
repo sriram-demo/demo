@@ -41,8 +41,9 @@ jobs:
     - name: All Labels
       id: generate
       run: |
+        jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo ${{ steps.check_pr_labels.outputs.labels }}
-        echo "matrix={\"include\":${{ steps.check_pr_labels.outputs.jobs }}}" >> $GITHUB_OUTPUT
+        echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
