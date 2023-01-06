@@ -135,7 +135,7 @@ jobs:
     if: ${{ github.actor != 'github-actions' }}
     name: Terminate Dynamic Runners
     runs-on: ubuntu-latest
-    needs: [shm_test_run]
+    needs: [shm_test_run,c360_test_run]
     steps:
       - name: Terminate Runners
         env:
