@@ -2,7 +2,7 @@
 export MDM_REGION="us-west-2"
 export CERT_EXPIRY=4380
 export ATLAS_API_PROJECT="MDM PROD STAGING"
-export AWS_ACCOUNT_TYPE="prod"
+export AWS_ACCOUNT_TYPE="rod"
 export CAI_INTERNAL_SERVICE_URL="cai-staging-usw1-r34-intelb.infacloudops.net"
 export CAI_INTERNAL_SERVICE_URL="https://cai-staging-usw1-r34-intelb.infacloudops.net"
 export CAI_SERVICE_URL="https://usw1-cai.dm-staging.informaticacloud.com"
