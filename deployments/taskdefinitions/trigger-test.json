@@ -1,4 +1,4 @@
 {
     "name":"Triggering Test",
-    "command":"sh deployments/test.sh"
+    "command":"bash deployments/test.sh"
 }
