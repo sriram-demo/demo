@@ -48,94 +48,11 @@ jobs:
     - name: Print ouptut
       run: |
         echo ${{ steps.out.outputs.matrix }}
-  getpod_master:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.generate_matrix.outputs.label_check == 'true'
-    name: Get POD ID
-    runs-on: ubuntu-latest
-    needs: generate_matrix
-    outputs:
-      pod_id: ${{ steps.folder_id_master.outputs.pod_id }}
-    steps:      
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: main
-          fetch-depth: 0     
-          token: ${{ github.token }}    
-
-      - name: Get Pod ID for master
-        id: folder_id_master
-        run: |
-         pod_id=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "**/*" |  awk -F '/' '{print $1}' | sort | uniq -u | grep -v dr)
-         echo $pod_id
-         echo "pod_id=$pod_id" >> $GITHUB_OUTPUT
-        continue-on-error: true
-  initialize_runners:
-    name: Initialize Dynamic Runners
-    runs-on: ubuntu-latest
-    needs: [generate_matrix,getpod_master]
-    steps:
-      - name: Initialize Runners
-        env:
-          TERM: xterm
-        run: |
-          sudo systemctl start actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
-          sudo systemctl status actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
-        continue-on-error: true
-  source_activate:
-    name: Source Activate
-    runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
-    needs: [initialize_runners,getpod_master]
-    outputs:
-      working_directory: ${{ steps.source_activate.outputs.working_directory }}
-      mail_host: ${{ steps.source_activate.outputs.mail_host }}
-    steps:      
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: main
-          fetch-depth: 0     
-          token: ${{ github.token }}   
-          
-      - name: Source Activate
-        id: source_activate
-        env:
-          folder_id: ${{ github.event.inputs.pod_id }}
-          TERM: xterm
-        run: | 
-          sudo chmod -R 777 ${{ github.workspace }}
-          cat <<EOF | bash
-          [[ ":$PATH:" != *":\$(pwd):"* ]] && PATH="\$(pwd):${PATH}"
-          source activate "$folder_id" 
-          ./mops build mdm
-          working_dir="build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm"
-          mail_host-"$(cat "$folder_id"/mdm/resources/helm/common-config-params.yaml | grep "mail_host" | awk '{print $2}' )"
-          echo "working_directory=$working_dir" >> $GITHUB_OUTPUT
-          echo "mail_host=$mail_host" >> $GITHUB_OUTPUT
-          EOF
-        continue-on-error: true        
-  cai_pd:
-    if: contains(needs.generate_matrix.outputs.labels, 'cai-pd')
-    name: CAI Post Deployment
-    runs-on: ${{ needs.getpod_master.outputs.pod_id }}
-    needs: [source_activate,getpod_master,generate_matrix]
-    steps:
-      - name: CAI Post Deployment
-        env:
-          folder_id: ${{ github.event.inputs.pod_id }}
-          working_directory: ${{ needs.source_activate.outputs.working_directory }}
-          TERM: xterm
-        run: |
-          source activate "$folder_id" 
-          cd ${{ env.working_directory}}
-          ./bin/tools/run-cai-post-deploy.sh
-        continue-on-error: true
-  
+ 
   deployment_stages:
-    if: always() &&
-        (needs.cai_pd.result == 'success' || needs.cai_pd.result == 'skipped')
+    if: always()
     name: ${{ matrix.job_name }}
-    needs: [source_activate,cai_pd,generate_matrix,getpod_master]
+    needs: [generate_matrix]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.generate_matrix.outputs.userconfirmation }}
@@ -154,10 +71,92 @@ jobs:
       - name: ${{ matrix.name }}
         env:
           TERM: xterm
-          folder_id: ${{ github.event.inputs.pod_id }}
-          working_directory: ${{ needs.source_activate.outputs.working_directory }}
-          mail_host: ${{ needs.source_activate.outputs.mail_host }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           ls
           ${{ matrix.command }}
+          
+#  getpod_master:
+#     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.generate_matrix.outputs.label_check == 'true'
+#     name: Get POD ID
+#     runs-on: ubuntu-latest
+#     needs: generate_matrix
+#     outputs:
+#       pod_id: ${{ steps.folder_id_master.outputs.pod_id }}
+#     steps:      
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           ref: main
+#           fetch-depth: 0     
+#           token: ${{ github.token }}    
+
+#       - name: Get Pod ID for master
+#         id: folder_id_master
+#         run: |
+#          pod_id=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "**/*" |  awk -F '/' '{print $1}' | sort | uniq -u | grep -v dr)
+#          echo $pod_id
+#          echo "pod_id=$pod_id" >> $GITHUB_OUTPUT
+#         continue-on-error: true
+#   initialize_runners:
+#     name: Initialize Dynamic Runners
+#     runs-on: ubuntu-latest
+#     needs: [generate_matrix,getpod_master]
+#     steps:
+#       - name: Initialize Runners
+#         env:
+#           TERM: xterm
+#         run: |
+#           sudo systemctl start actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
+#           sudo systemctl status actions.runner.infacloud-mdmnext-configs.${{runner.name}}-2.service
+#         continue-on-error: true
+#   source_activate:
+#     name: Source Activate
+#     runs-on: ubuntu-latest #${{ needs.getpod_master.outputs.pod_id }}
+#     needs: [initialize_runners,getpod_master]
+#     outputs:
+#       working_directory: ${{ steps.source_activate.outputs.working_directory }}
+#       mail_host: ${{ steps.source_activate.outputs.mail_host }}
+#     steps:      
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           ref: main
+#           fetch-depth: 0     
+#           token: ${{ github.token }}   
+          
+#       - name: Source Activate
+#         id: source_activate
+#         env:
+#           folder_id: ${{ github.event.inputs.pod_id }}
+#           TERM: xterm
+#         run: | 
+#           sudo chmod -R 777 ${{ github.workspace }}
+#           cat <<EOF | bash
+#           [[ ":$PATH:" != *":\$(pwd):"* ]] && PATH="\$(pwd):${PATH}"
+#           source activate "$folder_id" 
+#           ./mops build mdm
+#           working_dir="build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm"
+#           mail_host-"$(cat "$folder_id"/mdm/resources/helm/common-config-params.yaml | grep "mail_host" | awk '{print $2}' )"
+#           echo "working_directory=$working_dir" >> $GITHUB_OUTPUT
+#           echo "mail_host=$mail_host" >> $GITHUB_OUTPUT
+#           EOF
+#         continue-on-error: true        
+#   cai_pd:
+#     if: contains(needs.generate_matrix.outputs.labels, 'cai-pd')
+#     name: CAI Post Deployment
+#     runs-on: ${{ needs.getpod_master.outputs.pod_id }}
+#     needs: [source_activate,getpod_master,generate_matrix]
+#     steps:
+#       - name: CAI Post Deployment
+#         env:
+#           folder_id: ${{ github.event.inputs.pod_id }}
+#           working_directory: ${{ needs.source_activate.outputs.working_directory }}
+#           TERM: xterm
+#         run: |
+#           source activate "$folder_id" 
+#           cd ${{ env.working_directory}}
+#           ./bin/tools/run-cai-post-deploy.sh
+#         continue-on-error: true
+  
         
