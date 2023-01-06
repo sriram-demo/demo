@@ -71,7 +71,7 @@ jobs:
       - name: ${{ matrix.name }}
         env:
           TERM: xterm
-          GH_TOKEN: ${{ secrets.TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           ${{ matrix.command }}
           
