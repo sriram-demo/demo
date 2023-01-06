@@ -19,7 +19,6 @@ if [[ $? -eq 0 ]]; then
     sleep 10
     test_workflow_url=$(gh run list -w $TEST_ACTION_FILE --repo $REPO_NAME --json name,url | jq -r --arg actionName "$TEST_ACTION_FILTER_QUERY" '.[] | select(.name == $actionName ) | .url' | head -n 1 )
     echo "Action Log can be viewed here $test_workflow_url"
-    gh run watch $(echo $test_workflow_url | rev | cut -d '/' -f 1 | rev) --repo $REPO_NAME
     test=$(gh run watch $(echo $test_workflow_url | rev | cut -d '/' -f 1 | rev) --repo $REPO_NAME)
     
 else
