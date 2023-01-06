@@ -144,6 +144,13 @@ jobs:
       matrix: ${{ fromJson(needs.generate_matrix.outputs.jobs) }}
       max-parallel: 1 # Run jobs serially
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0     
+          token: ${{ github.token }} 
+          
       - name: ${{ matrix.name }}
         env:
           TERM: xterm
