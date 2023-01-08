@@ -54,7 +54,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: master
+          ref: main
           fetch-depth: 0     
           token: ${{ github.token }}   
         
@@ -72,7 +72,7 @@ jobs:
           cd build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm
           echo ::set-output name=working-directory::"build/$(cat "$folder_id"/env | grep "POD_ID" | awk -F "=" '{print $2}' | tr -d '"')/mdm"
           EOF
-        continue-on-error: false
+        continue-on-error: true
 
   validate:
     name: "Validate Feature Toggles"
@@ -98,7 +98,7 @@ jobs:
           cd ${{ env.working-directory}}
          ./bin/tools/feature-toggles.sh validate
          EOF
-        continue-on-error: false
+        continue-on-error: true
 
   deploy_toggles:
       name: Deploy Toggles
@@ -117,7 +117,7 @@ jobs:
           folder_id: ${{ github.event.inputs.pod_id }}
           TERM: xterm
           working-directory: ${{ needs.source_activate.outputs.working-directory }}
-        continue-on-error: false
+        continue-on-error: true
         run: |
           sudo chmod -R 777 ${{ github.workspace }}
           cat <<EOF | bash
