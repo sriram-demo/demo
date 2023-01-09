@@ -62,6 +62,7 @@ function triggerTest(){
 }
 
 function triggerFT(){
+  gh label delete $PR --confirm
   PR=$(echo $PR | rev | cut -d '/' -f 1 | rev)
   logInfo "Merging PR $PR to master branch"
   sleep 2
