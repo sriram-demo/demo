@@ -104,6 +104,6 @@ jobs:
         env:
           TERM: xterm
           GH_TOKEN: ${{ github.token }}
-          PR:  ${{ needs.generate_matrix.outputs.ft-branch }}
+          PR: ${{ needs.generate_matrix.outputs.ft-branch }}
         run: |
           ${{ matrix.command }}
