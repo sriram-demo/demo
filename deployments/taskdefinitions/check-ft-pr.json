@@ -1,4 +1,4 @@
 {
     "name": "Check feature toggles PR is merged",
-    "command": "echo Please check if the PR for feature toggles is merged : https://github.com/infacloud/mdmnext-configs/pulls"
+    "command": "bash deployments/test.sh ft_dispatch"
 }
