@@ -1,2 +1,2 @@
 stages:
-  - trigger-test
+  - check-ft-pr
