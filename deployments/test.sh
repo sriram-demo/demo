@@ -62,9 +62,10 @@ function triggerTest(){
 }
 
 function triggerFT(){
+  PR=$(echo $PR | rev | cut -d '/' -f 1 | rev)
   logInfo "Merging PR $PR to master branch"
   sleep 2
-  gh pr merge $PR -d -m
+  gh pr merge $PR -d -m --repo $REPO_NAME
   if [[ $? -eq 0 ]]; then
     echo "Triggering Feature Toggle Dispatch on $POD_ID"
     sleep 5
