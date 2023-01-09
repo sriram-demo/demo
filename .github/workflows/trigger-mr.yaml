@@ -28,7 +28,7 @@ jobs:
       label_check: ${{ steps.check_pr_labels.outputs.result }}
       labels: ${{ steps.check_pr_labels.outputs.labels }}
       jobs: ${{ steps.generate.outputs.matrix }}
-      ft-branch: ${{ steps.generate.outputs.ft-branch }}
+      ft-branch: ${{ steps.check_pr_labels.outputs.ft-branch }}
       userconfirmation: ${{ steps.check_pr_labels.outputs.userconfirmation }}
     steps:
     - name: Check
