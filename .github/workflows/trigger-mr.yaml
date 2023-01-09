@@ -45,10 +45,11 @@ jobs:
         jobs='${{ steps.check_pr_labels.outputs.jobs }}'
         echo $jobs
         echo ${{ steps.check_pr_labels.outputs.labels }}
+        echo ${{ steps.check_pr_labels.outputs.ft-branch }}
         echo "matrix={\"include\":$jobs}" >> $GITHUB_OUTPUT
     - name: Print ouptut
       run: |
-        echo ${{ steps.out.outputs.matrix }}    
+        echo ${{ steps.generate.outputs.matrix }}    
   cai_pd:
     if: contains(needs.generate_matrix.outputs.labels, 'cai-pd')
     name: CAI Post Deployment
